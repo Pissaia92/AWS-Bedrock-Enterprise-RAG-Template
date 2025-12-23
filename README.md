@@ -6,22 +6,22 @@ Reference architecture for enterprise **Generative AI**, using **AWS Bedrock (Ti
 This project implements the **RAG (Retrieval-Augmented Generation)** pattern with a focus on stability and control.
 ```mermaid
 graph TD
-    User[Usuário / Client] -->|POST /ask| API[FastAPI Async]
-    API -->|Orquestração| Chain[LangChain RAG]
+    User[User / Client] -->|POST /ask| API[FastAPI Async]
+    API -->|Orchestration| Chain[LangChain RAG]
     
-    subgraph "Retrieval Layer (Memória)"
+    subgraph "Retrieval Layer (Memory)"
         Chain -->|Query| VectorDB[(FAISS Local)]
-        VectorDB -->|Contexto Relevante| Chain
+        VectorDB -->|Relevant Context| Chain
     end
     
     subgraph "Generative Layer (AWS Bedrock)"
-        Chain -->|Prompt + Contexto| Wrapper[Custom TitanLLM Wrapper]
+        Chain -->|Prompt + Context| Wrapper[Custom TitanLLM Wrapper]
         Wrapper -->|Boto3 Invoke| Bedrock[AWS Bedrock API]
         Bedrock -.->|Titan Embeddings| VectorDB
         Bedrock -->|Titan Text Express| Wrapper
     end
     
-    Wrapper -->|Resposta Gerada| API
+    Wrapper -->|Generated Response| API
     API -->|JSON| User
 ```
 
